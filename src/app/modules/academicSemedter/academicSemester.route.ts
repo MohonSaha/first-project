@@ -18,6 +18,12 @@ router.get('/', AcademicSemesterControllers.getAllSemester)
 
 router.get('/:semesterID', AcademicSemesterControllers.getSingleSemester)
 
-// router.delete('/:studentId', StudentControllers.deleteStudent)
+router.patch(
+  '/:semesterID',
+  validateRequest(
+    AcademicSemesterValidations.updateAcademicSemesterValidationSchema,
+  ),
+  AcademicSemesterControllers.updateAcademicSemester,
+)
 
 export const AcademicSemesterRoutes = router

@@ -40,11 +40,13 @@ export type TStudent = {
   gaurdian: TGaurdian
   localGaurdian: TLocalGaurdian
   profileImage?: string
+  admissionSemester: Types.ObjectId
   isDeleted: boolean
 }
 
 // Code for creating static
 export interface StudentModel extends Model<TStudent> {
+  // eslint-disable-next-line no-unused-vars
   isUserExist(id: string): Promise<TStudent | null>
 }
 
