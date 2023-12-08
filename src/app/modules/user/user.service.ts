@@ -4,7 +4,6 @@ import { TStudent } from '../student/student.interface'
 import { TUser } from './user.interface'
 import { User } from './user.model'
 import { Student } from '../student/student.model'
-import { TAcademicSemester } from '../academicSemedter/academicSemester.interface'
 import { AcademicSemester } from '../academicSemedter/academicSemester.model'
 import { generateStudentId } from './user.utils'
 
