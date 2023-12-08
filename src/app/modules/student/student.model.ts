@@ -170,11 +170,6 @@ studentSchema.pre('find', function (next) {
   next()
 })
 
-studentSchema.pre('findOne', function (next) {
-  this.find({ isDeleted: { $ne: true } })
-  next()
-})
-
 studentSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
   next()
@@ -190,5 +185,10 @@ studentSchema.statics.isUserExist = async function (id: string) {
   const exisingUser = await Student.findOne({ id })
   return exisingUser
 }
+
+studentSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema)
