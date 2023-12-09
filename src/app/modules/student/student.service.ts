@@ -31,7 +31,34 @@ const getSingleStudentFromDB = async (id: string) => {
 }
 
 const updateStudentIntoDB = async (id: string, payLoad: Partial<TStudent>) => {
-  const result = await Student.findOneAndUpdate({ id }, payLoad)
+  const { name, gaurdian, localGaurdian, ...remainingStudentData } = payLoad
+
+  const modifiedUpdatedData: Record<string, unknown> = {
+    ...remainingStudentData,
+  }
+
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifiedUpdatedData[`name.${key}`] = value
+    }
+  }
+
+  if (gaurdian && Object.keys(gaurdian).length) {
+    for (const [key, value] of Object.entries(gaurdian)) {
+      modifiedUpdatedData[`gaurdian.${key}`] = value
+    }
+  }
+
+  if (localGaurdian && Object.keys(localGaurdian).length) {
+    for (const [key, value] of Object.entries(localGaurdian)) {
+      modifiedUpdatedData[`localGaurdian.${key}`] = value
+    }
+  }
+
+  const result = await Student.findOneAndUpdate({ id }, modifiedUpdatedData, {
+    new: true,
+    runValidators: true,
+  })
   return result
 }
 
@@ -68,6 +95,7 @@ const deleteStudentFromDB = async (id: string) => {
   } catch (error) {
     await session.abortTransaction()
     await session.endSession()
+    throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student')
   }
 }
 

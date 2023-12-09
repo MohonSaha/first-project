@@ -1,21 +1,49 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { NextFunction, Request, Response } from 'express'
+import { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
+import { ZodError, ZodIssue } from 'zod'
+import { TErrorSouces } from '../interface/error'
+import config from '../config'
+import handelZodError from '../errors/handleZodError'
+import handleValidationError from '../errors/handleValidationError'
+import handleCastError from '../errors/handleCastError'
 
-const globalErrorHandler = (
-  err: any,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const statusCode = err.statusCode || 500
-  const message = err.message || 'Something went Wrong'
+const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  // settign default values
+  let statusCode = err.statusCode || 500
+  let message = err.message || 'Something went Wrong'
 
+  let errorSouces: TErrorSouces = [
+    {
+      path: '',
+      message: 'Something went Wrong',
+    },
+  ]
+
+  if (err instanceof ZodError) {
+    const simplifiedError = handelZodError(err)
+    statusCode = simplifiedError.statusCode
+    message = simplifiedError.message
+    errorSouces = simplifiedError.errorSouces
+  } else if (err?.name === 'ValidationError') {
+    const simplifiedError = handleValidationError(err)
+    statusCode = simplifiedError.statusCode
+    message = simplifiedError.message
+    errorSouces = simplifiedError.errorSouces
+  } else if (err?.name === 'CastError') {
+    const simplifiedError = handleCastError(err)
+    statusCode = simplifiedError.statusCode
+    message = simplifiedError.message
+    errorSouces = simplifiedError.errorSouces
+  }
+
+  // ultimate error return
   return res.status(statusCode).json({
     success: false,
     message,
-    error: err,
+    errorSouces,
+    stack: config.NODE_ENV === 'development' ? err?.stack : null,
   })
 }
 
