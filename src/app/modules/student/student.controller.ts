@@ -8,7 +8,7 @@ import AppError from '../../errors/AppError'
 
 // controller function to get data
 const getAllStudents = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentsFromDB()
+  const result = await StudentServices.getAllStudentsFromDB(req.query)
   // send response here
   sendResponse(res, {
     statusCode: httpStatus.OK,

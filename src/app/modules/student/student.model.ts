@@ -177,7 +177,7 @@ studentSchema.pre('aggregate', function (next) {
 
 // virtual
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} + ${this.name.middleName} + ${this.name.lastName}`
+  return `${this?.name?.firstName} + ${this?.name?.middleName} + ${this?.name?.lastName}`
 })
 
 // Creating a custom static method
