@@ -20,8 +20,8 @@ const getAllStudents = catchAsync(async (req, res) => {
 
 // controller func to get single data
 const getSingleStudent = catchAsync(async (req, res) => {
-  const studentId = req.params.studentId
-  const result = await StudentServices.getSingleStudentFromDB(studentId)
+  const id = req.params.id
+  const result = await StudentServices.getSingleStudentFromDB(id)
   res.status(200).json({
     success: true,
     message: 'Single data retrieved done',
@@ -31,15 +31,15 @@ const getSingleStudent = catchAsync(async (req, res) => {
 
 // controller func to delete/update single data
 const updateStudent = catchAsync(async (req, res) => {
-  const studentId = req.params.studentId
+  const id = req.params.id
   const { student } = req.body
 
-  // const existingUser = await Student.isUserExist(studentId)
+  // const existingUser = await Student.isUserExist(id)
   // if (!existingUser) {
   //   throw new AppError(httpStatus.NOT_FOUND, 'Student not found for delete')
   // }
 
-  const result = await StudentServices.updateStudentIntoDB(studentId, student)
+  const result = await StudentServices.updateStudentIntoDB(id, student)
   res.status(200).json({
     success: true,
     message: 'Student is updated successfully',
@@ -48,14 +48,14 @@ const updateStudent = catchAsync(async (req, res) => {
 })
 
 const deleteStudent = catchAsync(async (req, res) => {
-  const studentId = req.params.studentId
+  const id = req.params.id
 
-  const existingUser = await Student.isUserExist(studentId)
+  const existingUser = await Student.isUserExist(id)
   if (!existingUser) {
     throw new AppError(httpStatus.NOT_FOUND, 'Student not found for delete')
   }
 
-  const result = await StudentServices.deleteStudentFromDB(studentId)
+  const result = await StudentServices.deleteStudentFromDB(id)
   res.status(200).json({
     success: true,
     message: 'Student is deleted successfully',
