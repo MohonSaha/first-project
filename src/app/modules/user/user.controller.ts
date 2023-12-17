@@ -4,6 +4,7 @@ import sendResponse from '../../utils/sendResponse'
 import httpStatus from 'http-status'
 import catchAsync from '../../utils/catchAsync'
 
+// Create studnet account
 const createStudent: RequestHandler = catchAsync(async (req, res) => {
   const { password, student: payLoad } = req.body
 
@@ -17,6 +18,21 @@ const createStudent: RequestHandler = catchAsync(async (req, res) => {
   })
 })
 
+// Create faculty account
+const createAcademicFaculty: RequestHandler = catchAsync(async (req, res) => {
+  const { password, faculty: payLoad } = req.body
+
+  const result = await UserServices.createFacultyIntoDB(password, payLoad)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Academic faculty is created successfully',
+    data: result,
+  })
+})
+
 export const userControllers = {
   createStudent,
+  createAcademicFaculty,
 }

@@ -23,7 +23,7 @@ const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
   // set student role
   userData.role = 'student'
 
-  // find academic semester info
+  // find academic semester info just for creating id(code)
   const admissionSemester = await AcademicSemester.findById(
     payLoad.admissionSemester,
   )
@@ -67,6 +67,7 @@ const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
   }
 }
 
+// Faculty creation
 const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   // create a user object
   const userData: Partial<TUser> = {}
@@ -82,6 +83,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     payload.academicDepartment,
   )
 
+  // confirm that payload has carryed valid academicDepartment
   if (!academicDepartment) {
     throw new AppError(400, 'Academic department not found')
   }

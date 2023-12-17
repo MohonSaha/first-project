@@ -1,22 +1,8 @@
-import { RequestHandler } from 'express'
 // import { UserServices } from './user.service'
 import sendResponse from '../../utils/sendResponse'
 import httpStatus from 'http-status'
 import catchAsync from '../../utils/catchAsync'
 import { AcademicFacultyServices } from './academicFaculty.service'
-
-const createAcademicFaculty: RequestHandler = catchAsync(async (req, res) => {
-  const result = await AcademicFacultyServices.createAcademicFacultyIntoDB(
-    req.body,
-  )
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Academic faculty is created successfully',
-    data: result,
-  })
-})
 
 const getAllAcademicFaculties = catchAsync(async (req, res) => {
   const result = await AcademicFacultyServices.getAllAcademicFacultiesFromDB()
@@ -57,7 +43,6 @@ const updateAcademicFaculty = catchAsync(async (req, res) => {
 })
 
 export const AcademicFacultyControllers = {
-  createAcademicFaculty,
   getAllAcademicFaculties,
   getSingleAcademicFaculty,
   updateAcademicFaculty,
