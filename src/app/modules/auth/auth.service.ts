@@ -2,6 +2,8 @@ import httpStatus from 'http-status'
 import AppError from '../../errors/AppError'
 import { User } from '../user/user.model'
 import { TLoginUser } from './auth.interface'
+import jwt from 'jsonwebtoken'
+import config from '../../config'
 
 const loginUser = async (payload: TLoginUser) => {
   // Checking if the user is exist
@@ -16,7 +18,7 @@ const loginUser = async (payload: TLoginUser) => {
   }
 
   //   // checking if the user is blcoked
-  const userStatus = isUserExist?.status
+  const userStatus = user?.status
   if (userStatus === 'blocked') {
     throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked')
   }
@@ -25,7 +27,21 @@ const loginUser = async (payload: TLoginUser) => {
     throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched!!')
   }
 
-  // Access granded: Send access token, refreh token
+  // create token and sent to the client
+
+  const jwtPayload = {
+    userId: user.id,
+    role: user?.role,
+  }
+
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: '10d',
+  })
+
+  return {
+    accessToken,
+    needsPasswordCahnge: user?.needsPasswordChange,
+  }
 }
 
 export const AuthServices = {
