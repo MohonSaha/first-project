@@ -13,10 +13,14 @@ const userSchema = new Schema<TUser, UserModel>(
     password: {
       type: String,
       required: true,
+      select: 0,
     },
     needsPasswordChange: {
       type: Boolean,
       default: true,
+    },
+    passwordChangeAt: {
+      type: Date,
     },
     role: {
       type: String,
@@ -58,7 +62,7 @@ userSchema.post('save', function (doc, next) {
 
 // reuseable static method for ckecking user exist
 userSchema.statics.isUserExistByCustomId = async function (id: string) {
-  return await User.findOne({ id })
+  return await User.findOne({ id }).select('+password')
 }
 
 // reuseable static method for ckecking if the user is deleted
@@ -67,6 +71,17 @@ userSchema.statics.isUserDeleted = async function (id: string) {
   return status?.isDeleted
 }
 
+// reuseable static mathod for chaking if the jwtToken issued after the password cahnge
+userSchema.statics.isJWTIssuedBefforePasswordChange = function (
+  passwordChangedTimestamp,
+  jwtIssuedTimestamp,
+) {
+  const passChangedTime = new Date(passwordChangedTimestamp).getTime() / 1000
+  return passChangedTime > jwtIssuedTimestamp
+  // console.log(passChangedTime > jwtIssuedTimestamp)
+}
+
+// Cheking if the password is matched
 userSchema.statics.isPasswordMatched = async function (
   plainTextPassword,
   hashPassword,
