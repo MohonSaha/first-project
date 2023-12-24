@@ -18,7 +18,6 @@ import { AcademicDepartment } from '../academicDepartment/academicDepartment.mod
 import { Faculty } from '../faculty/faculty.model'
 import { Admin } from '../Admin/admin.model'
 import { TAdmin } from '../Admin/admin.interface'
-import { verifyToken } from '../auth/auth.utils'
 
 const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
   // create a user object
@@ -202,9 +201,16 @@ const getMe = async (userId: string, role: string) => {
   return result
 }
 
+// cahnege status data
+const chnageStatus = async (id: string, payload: { status: string }) => {
+  const result = await User.findByIdAndUpdate(id, payload, { new: true })
+  return result
+}
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
   getMe,
+  chnageStatus,
 }

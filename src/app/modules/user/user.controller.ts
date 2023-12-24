@@ -3,7 +3,6 @@ import { UserServices } from './user.service'
 import sendResponse from '../../utils/sendResponse'
 import httpStatus from 'http-status'
 import catchAsync from '../../utils/catchAsync'
-import AppError from '../../errors/AppError'
 
 // Create studnet account
 const createStudent: RequestHandler = catchAsync(async (req, res) => {
@@ -60,9 +59,23 @@ const getMe = catchAsync(async (req, res) => {
   })
 })
 
+// change status
+const chnageStatus = catchAsync(async (req, res) => {
+  const id = req.params.id
+  const result = await UserServices.chnageStatus(id, req.body)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User status is updated succesfully',
+    data: result,
+  })
+})
+
 export const userControllers = {
   createStudent,
   createAcademicFaculty,
   createAdmin,
   getMe,
+  chnageStatus,
 }
