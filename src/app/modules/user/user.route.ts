@@ -19,14 +19,14 @@ router.post(
 
 router.post(
   '/create-faculty',
-  // auth(USER_ROLE.admin),
+  auth(USER_ROLE.admin),
   validateRequest(createFacultyValidationSchema),
   userControllers.createAcademicFaculty,
 )
 
 router.post(
   '/create-admin',
-  auth(USER_ROLE.admin),
+  // auth(USER_ROLE.admin),
   validateRequest(createAdminValidationSchema),
   userControllers.createAdmin,
 )
