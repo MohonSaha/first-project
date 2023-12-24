@@ -18,6 +18,7 @@ import { AcademicDepartment } from '../academicDepartment/academicDepartment.mod
 import { Faculty } from '../faculty/faculty.model'
 import { Admin } from '../Admin/admin.model'
 import { TAdmin } from '../Admin/admin.interface'
+import { verifyToken } from '../auth/auth.utils'
 
 const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
   // create a user object
@@ -186,8 +187,24 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   }
 }
 
+// Get user data accouding to role
+const getMe = async (userId: string, role: string) => {
+  let result = null
+  if (role === 'student') {
+    result = await Student.findOne({ id: userId }).populate('user')
+  }
+  if (role === 'admin') {
+    result = await Admin.findOne({ id: userId }).populate('user')
+  }
+  if (role === 'faculty') {
+    result = await Faculty.findOne({ id: userId }).populate('user')
+  }
+  return result
+}
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMe,
 }
