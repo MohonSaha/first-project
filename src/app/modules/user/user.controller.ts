@@ -6,9 +6,14 @@ import catchAsync from '../../utils/catchAsync'
 
 // Create studnet account
 const createStudent: RequestHandler = catchAsync(async (req, res) => {
+  // console.log(req.file, 'file')
   const { password, student: payLoad } = req.body
 
-  const result = await UserServices.createStudentIntoDB(password, payLoad)
+  const result = await UserServices.createStudentIntoDB(
+    req.file,
+    password,
+    payLoad,
+  )
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

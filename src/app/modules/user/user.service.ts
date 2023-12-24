@@ -18,8 +18,14 @@ import { AcademicDepartment } from '../academicDepartment/academicDepartment.mod
 import { Faculty } from '../faculty/faculty.model'
 import { Admin } from '../Admin/admin.model'
 import { TAdmin } from '../Admin/admin.interface'
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
 
-const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
+const createStudentIntoDB = async (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  file: any,
+  password: string,
+  payLoad: TStudent,
+) => {
   // create a user object
   const userData: Partial<TUser> = {}
 
@@ -45,6 +51,12 @@ const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
       userData.id = await generateStudentId(admissionSemester)
     }
 
+    const imageName = `${userData?.id}${payLoad?.name?.firstName}`
+    const path = file?.path
+
+    // send image to cloudinary
+    const { secure_url } = await sendImageToCloudinary(imageName, path)
+
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }) // array
 
@@ -56,6 +68,7 @@ const createStudentIntoDB = async (password: string, payLoad: TStudent) => {
     // set id and _id as user
     payLoad.id = newUser[0].id // embedding id
     payLoad.user = newUser[0]._id // reference id
+    payLoad.profileImage = secure_url // attach profile image
 
     // create a student (transaction-2)
     const newStudent = await Student.create([payLoad], { session })

@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import { userControllers } from './user.controller'
 import { studentValidations } from '../student/student.zod.recommend.validation'
 import validateRequest from '../../middlewares/validateRequest'
@@ -7,6 +7,7 @@ import { createAdminValidationSchema } from '../Admin/admin.validation'
 import auth from '../../middlewares/auth'
 import { USER_ROLE } from './user.constant'
 import { UserVAlidation } from './user.validation'
+import { upload } from '../../utils/sendImageToCloudinary'
 
 const router = express.Router()
 
@@ -14,6 +15,12 @@ const router = express.Router()
 router.post(
   '/create-student',
   auth(USER_ROLE.admin),
+  upload.single('file'), // parse file through malter
+  (req: Request, res: Response, next: NextFunction) => {
+    // inject parse data in req.body through middleware
+    req.body = JSON.parse(req.body.data)
+    next()
+  },
   validateRequest(studentValidations.createStudentValidationSchema),
   userControllers.createStudent,
 )
