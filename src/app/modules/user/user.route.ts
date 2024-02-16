@@ -14,10 +14,11 @@ const router = express.Router()
 // Route will call controller function
 router.post(
   '/create-student',
-  auth(USER_ROLE.admin),
+  // auth(USER_ROLE.admin),
   upload.single('file'), // parse file through malter
   (req: Request, res: Response, next: NextFunction) => {
     // inject parse data in req.body through middleware
+    // console.log(req.body)
     req.body = JSON.parse(req.body.data)
     next()
   },
@@ -27,7 +28,7 @@ router.post(
 
 router.post(
   '/create-faculty',
-  auth(USER_ROLE.admin),
+  // auth(USER_ROLE.admin),
   validateRequest(createFacultyValidationSchema),
   userControllers.createAcademicFaculty,
 )
