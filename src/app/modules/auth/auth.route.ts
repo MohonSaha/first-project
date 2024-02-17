@@ -16,7 +16,12 @@ router.post(
 
 router.post(
   '/chnage-password',
-  auth(USER_ROLE.student, USER_ROLE.faculty, USER_ROLE.admin),
+  auth(
+    USER_ROLE.student,
+    USER_ROLE.faculty,
+    USER_ROLE.admin,
+    USER_ROLE.superAdmin,
+  ),
   validateRequest(AuthValidation.changePasswordValidationSchema),
   AuthControllers.chnagePassword,
 )
