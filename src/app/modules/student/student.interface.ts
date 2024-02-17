@@ -41,8 +41,9 @@ export type TStudent = {
   localGaurdian: TLocalGaurdian
   profileImage?: string
   admissionSemester: Types.ObjectId
-  isDeleted: boolean
   academicDepartment: Types.ObjectId
+  academicFaculty: Types.ObjectId
+  isDeleted: boolean
 }
 
 // Code for creating static
