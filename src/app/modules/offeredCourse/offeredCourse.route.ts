@@ -7,7 +7,11 @@ import { USER_ROLE } from '../user/user.constant'
 
 const router = express.Router()
 
-// router.get('/', OfferedCourseControllers.getAllOfferedCourses)
+router.get(
+  '/',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  OfferedCourseControllers.getAllOfferedCourses,
+)
 
 router.get(
   '/my-offered-courses',
